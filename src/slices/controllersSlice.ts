@@ -1,6 +1,6 @@
 import { createSlice, createEntityAdapter, createAsyncThunk } from "@reduxjs/toolkit";
 
-import type { RootState } from "../store";
+import type { AppDispatch, RootState } from "../store";
 
 export interface Controller {
   id: number;
@@ -25,6 +25,10 @@ export const fetchControllers = createAsyncThunk<Controller[], void, { rejectVal
     return rejectWithValue(error instanceof Error ? error.message : "An unknown error occurred");
   }
 });
+
+export const initSlice = () => async (dispatch: AppDispatch) => {
+  await dispatch(fetchControllers());
+};
 
 const controllersSlice = createSlice({
   name: "controllers",

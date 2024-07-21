@@ -1,27 +1,33 @@
-import { createSlice, createAsyncThunk, combineSlices, createSelector } from "@reduxjs/toolkit";
+import { combineSlices, createSlice, createAsyncThunk, createSelector } from "@reduxjs/toolkit";
+import { featureFlagConfig, injectFeatureFlaggedSlices } from "../featureFlags";
 
-import type { Reducer } from "@reduxjs/toolkit";
+import { selectAllSites } from "./sitesSlice";
+import { selectAllControllers } from "./controllersSlice";
+import { selectAllDoors } from "./doorsSlice";
 
-import sitesReducer, { fetchSites, selectAllSites } from "./sitesSlice";
-import controllersReducer, { fetchControllers, selectAllControllers } from "./controllersSlice";
-import doorsReducer, { fetchDoors, selectAllDoors } from "./doorsSlice";
-import type { AppDispatch } from "../store";
+import type { AppDispatch, RootState } from "../store";
 
-export const fetchAllComponents = createAsyncThunk<Record<string, any>, void, { dispatch: AppDispatch }>("components/fetchAllComponents", async (_, { dispatch }) => {
-  const fetchActions = {
-    sites: fetchSites(),
-    controllers: fetchControllers(),
-    doors: fetchDoors(),
-  };
+import { initSlice as initControllersSlice } from "./controllersSlice";
+import { initSlice as initSitesSlice } from "./sitesSlice";
+import { initSlice as initDoorsSlice } from "./doorsSlice";
 
-  const results = await Promise.allSettled(Object.entries(fetchActions).map(([_, action]) => dispatch(action as AppDispatch)));
+const sliceInitActions: Record<string, () => any> = {
+  controllers: initControllersSlice,
+  sites: initSitesSlice,
+  doors: initDoorsSlice,
+};
 
-  const successfulResults = Object.keys(fetchActions).reduce<Record<string, any>>((acc, key, index) => {
+export const fetchAllComponents = createAsyncThunk<Record<string, any>, void, { dispatch: AppDispatch; state: RootState }>("components/fetchAllComponents", async (_, { dispatch }) => {
+  const enabledSlices = Object.keys(sliceInitActions).filter((key) => featureFlagConfig[key]?.isEnabled);
+
+  const results = await Promise.allSettled(enabledSlices.map((key) => dispatch(sliceInitActions[key as keyof typeof sliceInitActions]())));
+
+  const successfulResults = enabledSlices.reduce<Record<string, any>>((acc, key, index) => {
     const result = results[index];
     if (result.status === "fulfilled") {
-      acc[key] = result.value.payload;
+      acc[key] = result.value;
     } else {
-      console.error(`Failed to fetch ${key}:`, result.reason);
+      console.error(`Failed to initialize ${key}:`, result.reason);
       acc[key] = null;
     }
     return acc;
@@ -36,7 +42,7 @@ const initialState = {
 };
 
 const componentsMetaSlice = createSlice({
-  name: "components",
+  name: "componentsMeta",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -50,20 +56,45 @@ const componentsMetaSlice = createSlice({
       })
       .addCase(fetchAllComponents.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || null;
+        state.error = action.error.message ?? null;
       });
   },
 });
 
-export const selectAllComponents = createSelector([selectAllSites, selectAllControllers, selectAllDoors], (sites, controllers, doors) => ({ sites, controllers, doors }));
+export interface LazyLoadedSlices {}
 
-const { reducer: componentsMetaReducer } = componentsMetaSlice;
+const baseComponentsSlice = combineSlices({
+  meta: componentsMetaSlice.reducer,
+}).withLazyLoadedSlices<LazyLoadedSlices>();
 
-const componentsSlice: Reducer = combineSlices({
-  meta: componentsMetaReducer,
-  sites: sitesReducer,
-  controllers: controllersReducer,
-  doors: doorsReducer,
-});
+export const updateComponentsSlice = ({ replaced, newConfig }: { replaced?: boolean; newConfig?: Partial<typeof featureFlagConfig> }) => {
+  return injectFeatureFlaggedSlices(baseComponentsSlice, featureFlagConfig, { replaced, newConfig });
+};
+
+// Initial creation of the componentsSlice
+let componentsSlice = updateComponentsSlice({ replaced: false });
 
 export default componentsSlice;
+
+// Dynamic selector
+export const selectAllComponents = createSelector([(state) => state, (state) => state.components.meta], (state, meta) => {
+  const components: Record<string, any> = { meta };
+
+  Object.entries(featureFlagConfig).forEach(([key, { isEnabled }]) => {
+    if (isEnabled && state.components[key]) {
+      switch (key) {
+        case "sites":
+          components.sites = selectAllSites(state);
+          break;
+        case "controllers":
+          components.controllers = selectAllControllers(state);
+          break;
+        case "doors":
+          components.doors = selectAllDoors(state);
+          break;
+      }
+    }
+  });
+
+  return components;
+});

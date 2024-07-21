@@ -1,6 +1,6 @@
-import { createSlice, createEntityAdapter, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createEntityAdapter } from "@reduxjs/toolkit";
 
-import type { RootState } from "../store";
+import type { AppDispatch, RootState } from "../store";
 
 export interface Site {
   id: number;
@@ -55,5 +55,9 @@ const sitesSelectorsGlobalized = {
 };
 
 export const { selectIds: selectSiteIds, selectEntities: selectSitesEntities, selectAll: selectAllSites, selectTotal: selectSitesTotal, selectSiteById } = sitesSelectorsGlobalized;
+
+export const initSlice = () => async (dispatch: AppDispatch) => {
+  await dispatch(fetchSites());
+};
 
 export default sitesSlice.reducer;

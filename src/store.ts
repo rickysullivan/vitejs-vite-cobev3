@@ -13,12 +13,19 @@ const store = configureStore({
   reducer: createRootReducer({ replaced: false }),
 });
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
-
 export const updateFeatureFlags = (newConfig: Partial<typeof featureFlagConfig>) => {
   updateFlags(newConfig);
   store.replaceReducer(createRootReducer({ replaced: true, newConfig }));
 };
+
+export interface BaseState {
+  components: ReturnType<typeof updateComponentsSlice>;
+}
+
+export type RootState = BaseState & {
+  [key: string]: any;
+};
+
+export type AppDispatch = typeof store.dispatch;
 
 export default store;

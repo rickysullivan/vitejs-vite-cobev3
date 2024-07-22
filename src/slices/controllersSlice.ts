@@ -63,7 +63,13 @@ const controllersSelectorsGlobalized = {
   selectControllerById: (state: RootState, { id }: { id: number }) => controllersSelectorsGlobalized.selectById(state, id),
 };
 
-export const { selectIds: selectControllerIds, selectEntities: selectControllersEntities, selectAll: selectAllControllers, selectTotal: selectControllersTotal, selectControllerById } = controllersSelectorsGlobalized;
+export const {
+  selectIds: selectControllerIds,
+  selectEntities: selectControllersEntities,
+  selectAll: selectAllControllers,
+  selectTotal: selectControllersTotal,
+  selectControllerById,
+} = controllersSelectorsGlobalized;
 
 export const { setSelectedController } = controllersSlice.actions;
 

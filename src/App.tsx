@@ -13,7 +13,7 @@ const FeatureToggle = ({ name, isEnabled, onToggle }: { name: string; isEnabled:
   <label className="switch">
     <input type="checkbox" checked={isEnabled} onChange={onToggle} />
     <span className="slider"></span>
-    {name}
+    {name.replace(/([A-Z])/g, " $1").replace(/^./, (match) => match.toUpperCase())}
   </label>
 );
 
@@ -91,6 +91,9 @@ const App = () => {
   return (
     <Provider store={store}>
       <div>
+        <header>
+          <h1>Injected Slice Demo</h1>
+        </header>
         <main>
           <ComponentsList />
         </main>

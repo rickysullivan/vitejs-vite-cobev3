@@ -71,28 +71,22 @@ export const updateComponentsSlice = ({ replaced, newConfig }: { replaced?: bool
   return injectFeatureFlaggedSlices(baseComponentsSlice, featureFlagConfig, { replaced, newConfig });
 };
 
-// Initial creation of the componentsSlice
 let componentsSlice = updateComponentsSlice({ replaced: false });
 
 export default componentsSlice;
 
-// Dynamic selector
-export const selectAllComponents = createSelector([(state) => state, (state) => state.components.meta], (state, meta) => {
+const selectorMap: Record<string, (state: RootState) => any> = {
+  sites: selectAllSites,
+  controllers: selectAllControllers,
+  doors: selectAllDoors,
+};
+
+export const selectAllComponents = createSelector([(state: RootState) => state, (state: RootState) => state.components.meta], (state, meta) => {
   const components: Record<string, any> = { meta };
 
   Object.entries(featureFlagConfig).forEach(([key, { isEnabled }]) => {
-    if (isEnabled && state.components[key]) {
-      switch (key) {
-        case "sites":
-          components.sites = selectAllSites(state);
-          break;
-        case "controllers":
-          components.controllers = selectAllControllers(state);
-          break;
-        case "doors":
-          components.doors = selectAllDoors(state);
-          break;
-      }
+    if (isEnabled && state.components[key] && selectorMap[key]) {
+      components[key] = selectorMap[key](state);
     }
   });
 

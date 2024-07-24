@@ -1,5 +1,6 @@
 import { createSlice, createEntityAdapter, createAsyncThunk } from "@reduxjs/toolkit";
 
+import type { Slice } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
 
 export interface Controller {
@@ -26,7 +27,7 @@ export const fetchControllers = createAsyncThunk<Controller[], void, { rejectVal
   }
 });
 
-const controllersSlice = createSlice({
+const controllersSlice: Slice = createSlice({
   name: "controllers",
   initialState: controllersAdapter.getInitialState({
     loading: false,
@@ -55,7 +56,7 @@ const controllersSlice = createSlice({
 });
 
 const controllersSelectorsGlobalized = {
-  ...controllersAdapter.getSelectors((state: RootState) => state.components.controllers),
+  ...controllersAdapter.getSelectors((state: RootState) => state.entities.controllers),
   selectControllerById: (state: RootState, { id }: { id: number }) => controllersSelectorsGlobalized.selectById(state, id),
 };
 
@@ -63,4 +64,4 @@ export const { selectIds: selectControllerIds, selectEntities: selectControllers
 
 export const { setSelectedController } = controllersSlice.actions;
 
-export default controllersSlice.reducer;
+export default controllersSlice;

@@ -1,5 +1,6 @@
 import { createSlice, createEntityAdapter, createAsyncThunk } from "@reduxjs/toolkit";
 
+import type { Slice } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
 
 export interface Door {
@@ -26,7 +27,7 @@ export const fetchDoors = createAsyncThunk<Door[], void, { rejectValue: string }
   }
 });
 
-const doorsSlice = createSlice({
+const doorsSlice: Slice = createSlice({
   name: "doors",
   initialState: doorsAdapter.getInitialState({
     loading: false,
@@ -50,10 +51,10 @@ const doorsSlice = createSlice({
 });
 
 const doorsSelectorsGlobalized = {
-  ...doorsAdapter.getSelectors((state: RootState) => state.components.doors),
+  ...doorsAdapter.getSelectors((state: RootState) => state.entities.doors),
   selectDoorById: (state: RootState, { id }: { id: number }) => doorsSelectorsGlobalized.selectById(state, id),
 };
 
 export const { selectIds: selectDoorIds, selectEntities: selectDoorsEntities, selectAll: selectAllDoors, selectTotal: selectDoorsTotal, selectDoorById } = doorsSelectorsGlobalized;
 
-export default doorsSlice.reducer;
+export default doorsSlice;

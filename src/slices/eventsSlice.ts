@@ -1,5 +1,6 @@
 import { createSlice, createEntityAdapter, createAsyncThunk } from "@reduxjs/toolkit";
 
+import type { Slice } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
 
 export interface Event {
@@ -28,7 +29,7 @@ export const fetchEvents = createAsyncThunk<Event[], void, { rejectValue: string
   }
 });
 
-const eventsSlice = createSlice({
+const eventsSlice: Slice = createSlice({
   name: "events",
   initialState: eventsAdapter.getInitialState({
     loading: false,
@@ -58,4 +59,4 @@ const eventsSelectorsGlobalized = {
 
 export const { selectIds: selectEventIds, selectEntities: selectEventsEntities, selectAll: selectAllEvents, selectTotal: selectEventsTotal, selectEventById } = eventsSelectorsGlobalized;
 
-export default eventsSlice.reducer;
+export default eventsSlice;

@@ -1,16 +1,17 @@
 import { createSlice, createAsyncThunk, combineSlices, createSelector } from "@reduxjs/toolkit";
 
+import type { Slice } from "@reduxjs/toolkit";
 import type { Reducer } from "@reduxjs/toolkit";
 
-import sitesReducer, { fetchSites, selectAllSites } from "./sitesSlice";
-import controllersReducer, { fetchControllers, selectAllControllers } from "./controllersSlice";
-import doorsReducer, { fetchDoors, selectAllDoors } from "./doorsSlice";
-import branchesReducer, { fetchBranches, selectAllBranches } from "./branchesSlice";
-import areaGroupsReducer, { fetchAreaGroups, selectAllAreaGroups } from "./areaGroupsSlice";
-import areasReducer, { fetchAreas, selectAllAreas } from "./areasSlice";
-import eventsReducer, { fetchEvents, selectAllEvents } from "./eventsSlice";
-import siteNotesReducer, { fetchSiteNotes, selectAllSiteNotes } from "./siteNotesSlice";
-import techniciansReducer, { fetchTechnicians, selectAllTechnicians } from "./techniciansSlice";
+import sitesSlice, { fetchSites, selectAllSites } from "./sitesSlice";
+import controllersSlice, { fetchControllers, selectAllControllers } from "./controllersSlice";
+import doorsSlice, { fetchDoors, selectAllDoors } from "./doorsSlice";
+import branchesSlice, { fetchBranches, selectAllBranches } from "./branchesSlice";
+import areaGroupsSlice, { fetchAreaGroups, selectAllAreaGroups } from "./areaGroupsSlice";
+import areasSlice, { fetchAreas, selectAllAreas } from "./areasSlice";
+import eventsSlice, { fetchEvents, selectAllEvents } from "./eventsSlice";
+import siteNotesSlice, { fetchSiteNotes, selectAllSiteNotes } from "./siteNotesSlice";
+import techniciansSlice, { fetchTechnicians, selectAllTechnicians } from "./techniciansSlice";
 
 import type { AppDispatch } from "../store";
 
@@ -48,7 +49,7 @@ const initialState = {
   error: null as string | null,
 };
 
-const entitiesMetaSlice = createSlice({
+const entitiesMetaSlice: Slice = createSlice({
   name: "entities",
   initialState,
   reducers: {},
@@ -80,19 +81,6 @@ export const selectAllEntities = createSelector([selectAllSites, selectAllContro
   technicians,
 }));
 
-const { reducer: entitiesMetaReducer } = entitiesMetaSlice;
-
-const entitiesSlice: Reducer = combineSlices({
-  meta: entitiesMetaReducer,
-  sites: sitesReducer,
-  controllers: controllersReducer,
-  doors: doorsReducer,
-  branches: branchesReducer,
-  areaGroups: areaGroupsReducer,
-  areas: areasReducer,
-  events: eventsReducer,
-  siteNotes: siteNotesReducer,
-  technicians: techniciansReducer,
-});
+const entitiesSlice: Reducer = combineSlices(entitiesMetaSlice, sitesSlice, controllersSlice, doorsSlice, branchesSlice, areaGroupsSlice, areasSlice, eventsSlice, siteNotesSlice, techniciansSlice);
 
 export default entitiesSlice;

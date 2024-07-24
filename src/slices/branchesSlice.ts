@@ -1,5 +1,6 @@
 import { createSlice, createEntityAdapter, createAsyncThunk } from "@reduxjs/toolkit";
 
+import type { Slice } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
 
 export interface Branch {
@@ -26,7 +27,7 @@ export const fetchBranches = createAsyncThunk<Branch[], void, { rejectValue: str
   }
 });
 
-const branchesSlice = createSlice({
+const branchesSlice: Slice = createSlice({
   name: "branches",
   initialState: branchesAdapter.getInitialState({
     loading: false,
@@ -56,4 +57,4 @@ const branchesSelectorsGlobalized = {
 
 export const { selectIds: selectBranchIds, selectEntities: selectBranchesEntities, selectAll: selectAllBranches, selectTotal: selectBranchesTotal, selectBranchById } = branchesSelectorsGlobalized;
 
-export default branchesSlice.reducer;
+export default branchesSlice;

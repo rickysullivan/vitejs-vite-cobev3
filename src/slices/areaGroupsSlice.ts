@@ -1,5 +1,6 @@
 import { createSlice, createEntityAdapter, createAsyncThunk } from "@reduxjs/toolkit";
 
+import type { Slice } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
 
 export interface AreaGroup {
@@ -26,7 +27,7 @@ export const fetchAreaGroups = createAsyncThunk<AreaGroup[], void, { rejectValue
   }
 });
 
-const areaGroupsSlice = createSlice({
+const areaGroupsSlice: Slice = createSlice({
   name: "areaGroups",
   initialState: areaGroupsAdapter.getInitialState({
     loading: false,
@@ -56,4 +57,4 @@ const areaGroupsSelectorsGlobalized = {
 
 export const { selectIds: selectAreaGroupIds, selectEntities: selectAreaGroupsEntities, selectAll: selectAllAreaGroups, selectTotal: selectAreaGroupsTotal, selectAreaGroupById } = areaGroupsSelectorsGlobalized;
 
-export default areaGroupsSlice.reducer;
+export default areaGroupsSlice;

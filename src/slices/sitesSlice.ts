@@ -1,5 +1,6 @@
 import { createSlice, createEntityAdapter, createAsyncThunk } from "@reduxjs/toolkit";
 
+import type { Slice } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
 
 export interface Site {
@@ -60,7 +61,7 @@ export const updateSite = createAsyncThunk<Site, UpdateSitePayload, { rejectValu
   }
 });
 
-const sitesSlice = createSlice({
+const sitesSlice: Slice = createSlice({
   name: "sites",
   initialState: sitesAdapter.getInitialState({
     loading: false,
@@ -123,4 +124,4 @@ const sitesSelectorsGlobalized = {
 
 export const { selectIds: selectSiteIds, selectEntities: selectSitesEntities, selectAll: selectAllSites, selectTotal: selectSitesTotal, selectSiteById } = sitesSelectorsGlobalized;
 
-export default sitesSlice.reducer;
+export default sitesSlice;

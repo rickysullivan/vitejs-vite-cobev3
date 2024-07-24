@@ -1,5 +1,6 @@
 import { createSlice, createEntityAdapter, createAsyncThunk } from "@reduxjs/toolkit";
 
+import type { Slice } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
 
 export interface Area {
@@ -26,7 +27,7 @@ export const fetchAreas = createAsyncThunk<Area[], void, { rejectValue: string }
   }
 });
 
-const areasSlice = createSlice({
+const areasSlice: Slice = createSlice({
   name: "areas",
   initialState: areasAdapter.getInitialState({
     loading: false,
@@ -56,4 +57,4 @@ const areasSelectorsGlobalized = {
 
 export const { selectIds: selectAreaIds, selectEntities: selectAreasEntities, selectAll: selectAllAreas, selectTotal: selectAreasTotal, selectAreaById } = areasSelectorsGlobalized;
 
-export default areasSlice.reducer;
+export default areasSlice;

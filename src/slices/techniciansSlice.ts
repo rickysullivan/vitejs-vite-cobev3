@@ -1,5 +1,6 @@
 import { createSlice, createEntityAdapter, createAsyncThunk } from "@reduxjs/toolkit";
 
+import type { Slice } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
 
 export interface Technician {
@@ -27,7 +28,7 @@ export const fetchTechnicians = createAsyncThunk<Technician[], void, { rejectVal
   }
 });
 
-const techniciansSlice = createSlice({
+const techniciansSlice: Slice = createSlice({
   name: "technicians",
   initialState: techniciansAdapter.getInitialState({
     loading: false,
@@ -57,4 +58,4 @@ const techniciansSelectorsGlobalized = {
 
 export const { selectIds: selectTechnicianIds, selectEntities: selectTechniciansEntities, selectAll: selectAllTechnicians, selectTotal: selectTechniciansTotal, selectTechnicianById } = techniciansSelectorsGlobalized;
 
-export default techniciansSlice.reducer;
+export default techniciansSlice;

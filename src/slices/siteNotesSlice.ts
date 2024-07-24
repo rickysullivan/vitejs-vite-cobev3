@@ -1,5 +1,6 @@
 import { createSlice, createEntityAdapter, createAsyncThunk } from "@reduxjs/toolkit";
 
+import type { Slice } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
 
 export interface SiteNote {
@@ -28,7 +29,7 @@ export const fetchSiteNotes = createAsyncThunk<SiteNote[], void, { rejectValue: 
   }
 });
 
-const siteNotesSlice = createSlice({
+const siteNotesSlice: Slice = createSlice({
   name: "siteNotes",
   initialState: siteNotesAdapter.getInitialState({
     loading: false,
@@ -58,4 +59,4 @@ const siteNotesSelectorsGlobalized = {
 
 export const { selectIds: selectSiteNoteIds, selectEntities: selectSiteNotesEntities, selectAll: selectAllSiteNotes, selectTotal: selectSiteNotesTotal, selectSiteNoteById } = siteNotesSelectorsGlobalized;
 
-export default siteNotesSlice.reducer;
+export default siteNotesSlice;

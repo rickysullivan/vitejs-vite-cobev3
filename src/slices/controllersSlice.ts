@@ -55,7 +55,7 @@ const controllersSlice = createSlice({
 });
 
 const controllersSelectorsGlobalized = {
-  ...controllersAdapter.getSelectors((state: RootState) => state.components.controllers),
+  ...controllersAdapter.getSelectors((state: RootState) => state.entities.controllers),
   selectControllerById: (state: RootState, { id }: { id: number }) => controllersSelectorsGlobalized.selectById(state, id),
 };
 

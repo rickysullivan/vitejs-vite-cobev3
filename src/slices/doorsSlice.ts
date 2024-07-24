@@ -50,7 +50,7 @@ const doorsSlice = createSlice({
 });
 
 const doorsSelectorsGlobalized = {
-  ...doorsAdapter.getSelectors((state: RootState) => state.components.doors),
+  ...doorsAdapter.getSelectors((state: RootState) => state.entities.doors),
   selectDoorById: (state: RootState, { id }: { id: number }) => doorsSelectorsGlobalized.selectById(state, id),
 };
 

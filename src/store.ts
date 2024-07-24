@@ -1,10 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import componentsReducer from "./slices/componentsSlice";
+import entitiesReducer from "./slices/entitiesSlice";
 
 const store = configureStore({
   reducer: {
-    components: componentsReducer,
+    entities: entitiesReducer,
   },
 });
 

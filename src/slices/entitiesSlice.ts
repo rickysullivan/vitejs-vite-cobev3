@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, combineReducers, createSelector, combineSlices } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createSelector, combineSlices } from "@reduxjs/toolkit";
 
 import type { Slice } from "@reduxjs/toolkit";
 import type { Reducer } from "@reduxjs/toolkit";

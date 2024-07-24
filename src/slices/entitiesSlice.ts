@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, combineSlices, createSelector } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, combineReducers, createSelector, combineSlices } from "@reduxjs/toolkit";
 
 import type { Slice } from "@reduxjs/toolkit";
 import type { Reducer } from "@reduxjs/toolkit";
@@ -50,7 +50,7 @@ const initialState = {
 };
 
 const entitiesMetaSlice: Slice = createSlice({
-  name: "entities",
+  name: "meta",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
